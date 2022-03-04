@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ES">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buscador Clima</title>
+    <link href="css/styles.css" rel="stylesheet" />
+    <link href="css/tailwind.min.css" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-800 ">
+    <header class="bg-naranja mb-12">
+      <h1 
+        id="titulo"
+        class="text-4xl font-bold uppercase text-center py-6"
+      >
+        Buscador del Clima
+      </h1>
+    </header>
+    <div class="container mx-auto my-auto ">
+      
+      <div class="max-w-lg mx-auto sm:mt-24">
+        <div class="flex flex-wrap">
+          <div class="w-full px-2">
+            <div
+              class="bg-gray-900 text-white relative min-w-0 break-words rounded-lg overflow-hidden shadow-sm mb-4 w-full bg-white dark:bg-gray-600 border-2 border-slate-700 rounded-lg"
+            >
+              <div class="px-6 py-6 relative">
+                <h5 class="mb-0 font-bold text-4xl" id="card_ciudad">Ciudad</h5>
+                <div class="flex mb-4 justify-between items-center">
+                  <div>
+                    <h6 class="mb-0 text-sm text-naranja">Actualizado:</h6>
+                    <p class="mb-0 text-sm" id="card_actualizado"></p>
+                    <h6 class="text-sm mt-2 text-naranja">Condición actual</h6>
+                    <p class="mb-0 text-sm" id="card_condicion_actual"></p>
+                  </div>
+
+                  <img
+                    src="http://openweathermap.org/img/wn/10d@2x.png"
+                    alt="icono estado del tiempo"
+                    id="card_icono"
+                  />
+                  <div class="text-right">
+                    <h3
+                      class="font-bold text-4xl mb-0"
+                      id="card_temperatura_actual"
+                    >
+                      ---
+                    </h3>
+                  </div>
+                </div>
+                <div
+                  class="block sm:flex justify-between items-center flex-wrap"
+                >
+                  <div
+                    class="w-full sm:w-1/2 sm:border-b-2 md:mb-4 border-naranja"
+                  >
+                    <div class="flex mb-2 justify-between items-center">
+                      Viento<span title="Dirección y velocidad del viento " class="text-xl pr-4" id="card_viento"
+                        >---</span
+                      >
+                    </div>
+                  </div>
+                  <div
+                    class="w-full sm:w-1/2 border-b-2 md:mb-4 border-naranja"
+                  >
+                    <div class="flex mb-2 justify-between items-center">
+                      Humedad<span class="text-xl pr-4" id="card_humedad"
+                        >---</span
+                      >
+                    </div>
+                  </div>
+                  <div class="w-full sm:w-1/2">
+                    <div class="flex mb-2 justify-between items-center">
+                      Temperatura<span
+                        class="text-2xl pr-4"
+                        id="card_temperatura"
+                        >---</span
+                      >
+                    </div>
+                  </div>
+                  <div class="w-full sm:w-1/2">
+                    <div class="flex mb-2 justify-between items-center">
+                      Sensación termica<span
+                        class="text-2xl pr-4"
+                        id="card_sensacion"
+                        >---</span
+                      >
+                    </div>
+                  </div>
+                  <div class="w-full sm:w-1/2">
+                    <div class="flex mb-2 justify-between items-center">
+                      Temperatura mínima<span
+                        class="text-2xl pr-4"
+                        id="card_minima"
+                        >---</span
+                      >
+                    </div>
+                  </div>
+                  <div class="w-full sm:w-1/2">
+                    <div class="flex mb-2 justify-between items-center">
+                      Temperatura máxima<span
+                        class="text-2xl pr-4"
+                        id="card_maxima"
+                        >---</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form
+          id="formulario"
+          class="mt-6 max-w-lg mx-auto px-4 mb-12"
+          action="#"
+          method="POST"
+        >
+          <div class="mt-5">
+            <input
+              type="text"
+              name="ciudad"
+              id="ciudad"
+              placeholder="Escribe tu Ciudad"
+              class="w-full p-2 rounded"
+            />
+          </div>
+          <div class="mt-5">
+            <select
+              class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              id="pais"
+            >
+              <option disabled selected value="">-- Seleccione --</option>
+              <option value="AR">Argentina</option>
+              <option value="CO">Colombia</option>
+              <option value="CR">Costa Rica</option>
+              <option value="ES">España</option>
+              <option value="US">Estados Unidos</option>
+              <option value="MX">México</option>
+              <option value="PE">Perú</option>
+              <option value="UY">Uruguay</option>
+              <option value="PY">Paraguay</option>
+              <option value="CL">Chile</option>
+              <option value="BO">Bolivia</option>
+              <option value="BR">Brasil</option>
+              <option value="EC">Ecuador</option>
+              <option value="VE">Venezuela</option>
+            </select>
+          </div>
+
+          <input
+            type="submit"
+            class="mt-5 w-full bg-naranja p-3 uppercase font-bold cursor-pointer rounded"
+            value="Obtener Clima"
+          />
+        </form>
+      </div>
+    </div>
+
+     <footer class="bg-naranja py-6 mt-48">
+      <p class="text-xl text-center">Pagina web creada por <a class="font-bold" href="https://www.linkedin.com/in/julian-martinez-dev/" rel="nofollow noopener noreferrer" target="_blank">Julian Martinez</a></p>
+      <a href="https://github.com/julianmartinez-dev" rel="nofollow noopener noreferrer" target="_blank"><img class="mx-auto h-12 mt-2"src="assets/github-icon.svg" alt="icono gitbut"></a>
+      
+   
+    </footer>
+   
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
