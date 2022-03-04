@@ -19,6 +19,7 @@ const cardViento = document.querySelector('#card_viento');
 document.addEventListener('DOMContentLoaded', () => {
   formulario.addEventListener('submit', buscarClima);
 
+  rellenarOptions();
   obtenerUbicacion();
 });
 
@@ -54,7 +55,7 @@ function mostrarError(mensaje) {
       'mx-auto',
       'mt-6',
       'text-center',
-      'error',
+      'error'
     );
     alerta.innerHTML = `
         <strong class="font-bold">Error!</strong>
@@ -83,7 +84,6 @@ function mostrarResultado(resultado) {
     mostrarError('Ciudad no encontrada');
     return;
   }
-  console.log(resultado);
   //Datos principales
   const { temp, temp_max, temp_min, humidity, feels_like } = resultado.main;
 
@@ -102,12 +102,15 @@ function mostrarResultado(resultado) {
   );
   cardCondicionActual.textContent = traducirCondicionActual(description);
   cardTempActual.textContent = formatearTemperatura(temp);
-  cardViento.textContent = formatearViento(deg,speed)
+  cardViento.textContent = formatearViento(deg, speed);
   cardHumedad.textContent = humidity + '%';
   cardTemperatura.textContent = formatearTemperatura(temp);
   cardSensacion.textContent = formatearTemperatura(feels_like);
   cardMinima.textContent = formatearTemperatura(temp_min);
   cardMaxima.textContent = formatearTemperatura(temp_max);
+
+  ciudadInput.value = '';
+  paisInput.value = '';
 }
 
 function obtenerUbicacion() {
@@ -120,7 +123,6 @@ function obtenerUbicacion() {
     fetch(url)
       .then((respuesta) => respuesta.json())
       .then((datos) => {
-        
         consultarAPI(datos[0].name, datos[0].country);
       });
   });
@@ -132,37 +134,36 @@ function formatearTemperatura(dato) {
   return dato;
 }
 
-function formatearViento(grados,velocidad) {
+function formatearViento(grados, velocidad) {
+  let direcion;
 
-    let direcion;
-
-    //Calcular direccion del viento segun los grados que obtemos de la api
+  //Calcular direccion del viento segun los grados que obtemos de la api
   if (grados && velocidad) {
     if ((grados > 341 && grados <= 360) || (grados > 0 && grados <= 20)) {
-      direcion =  'N';
+      direcion = 'N';
     } else if (grados > 290 && grados <= 340) {
-      direcion =  'NO';
+      direcion = 'NO';
     } else if (grados > 251 && grados <= 290) {
-      direcion =  'O';
+      direcion = 'O';
     } else if (grados > 200 && grados <= 250) {
-      direcion =  'SO';
+      direcion = 'SO';
     } else if (grados > 160 && grados <= 200) {
-      direcion =  'S';
+      direcion = 'S';
     } else if (grados > 110 && grados <= 160) {
-      direcion =  'SE';
+      direcion = 'SE';
     } else if (grados > 70 && grados <= 110) {
-      direcion =  'E';
+      direcion = 'E';
     } else if (grados > 20 && grados <= 70) {
-      direcion =  'NE';
+      direcion = 'NE';
     }
-  }else{
-      return 'Sin datos'
+  } else {
+    return 'Sin datos';
   }
 
   //calcular los km/h en base a los m/s que nos brinda la api
   velocidad = (velocidad * 3.6).toFixed(1);
 
-  return `${direcion} ${velocidad} Km/h`
+  return `${direcion} ${velocidad} Km/h`;
 }
 
 function traducirCondicionActual(condicion) {
@@ -176,4 +177,24 @@ function traducirCondicionActual(condicion) {
   xhttp.send();
   var response = JSON.parse(xhttp.responseText);
   return response[0][0][0];
+}
+
+function rellenarOptions() {
+  const url =
+    'https://restcountries.com/v2/all?fields=alpha2Code,translations,population';
+
+  fetch(url)
+    .then((respuesta) => respuesta.json())
+    .then((paises) => {
+      paises.forEach((pais) => {
+        const { alpha2Code, translations, population } = pais;
+
+        if (population > 2000000) {
+          const option = document.createElement('option');
+          option.value = alpha2Code;
+          option.textContent = translations['es'];
+          paisInput.appendChild(option);
+        }
+      });
+    });
 }
