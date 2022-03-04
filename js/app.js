@@ -19,8 +19,9 @@ const cardViento = document.querySelector('#card_viento');
 document.addEventListener('DOMContentLoaded', () => {
   formulario.addEventListener('submit', buscarClima);
 
-  rellenarOptions();
+  
   obtenerUbicacion();
+  rellenarOptions();
 });
 
 function buscarClima(e) {
