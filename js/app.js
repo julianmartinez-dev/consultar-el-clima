@@ -70,14 +70,22 @@ function mostrarError(mensaje) {
   }
 }
 
-function consultarAPI(ciudad, pais) {
+async function consultarAPI(ciudad, pais) {
   const appKEY = 'fc6a1cbe8e03d34e11457d0c8e2e02cc';
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${ciudad},${pais}&appid=${appKEY}`;
 
-  fetch(url)
-    .then((respuesta) => respuesta.json())
-    .then((resultado) => mostrarResultado(resultado))
-    .catch((error) => mostrarError(error));
+  // fetch(url)
+  //   .then((respuesta) => respuesta.json())
+  //   .then((resultado) => mostrarResultado(resultado))
+  //   .catch((error) => mostrarError(error));
+
+  try {
+    let respuesta = await fetch(url);
+    let data = await respuesta.json()
+    mostrarResultado(data)
+  } catch (error) {
+    mostrarError(error)
+  }
 }
 
 function mostrarResultado(resultado) {
@@ -118,14 +126,26 @@ function obtenerUbicacion() {
   const appkey = 'fc6a1cbe8e03d34e11457d0c8e2e02cc';
   let url;
 
-  navigator.geolocation.getCurrentPosition((res) => {
+navigator.geolocation.getCurrentPosition(async (res) => {
     url = `https://api.openweathermap.org/geo/1.0/reverse?lat=${res.coords.latitude}&lon=${res.coords.longitude}&limit=1&appid=${appkey}&lang={sp}`;
 
-    fetch(url)
-      .then((respuesta) => respuesta.json())
-      .then((datos) => {
-        consultarAPI(datos[0].name, datos[0].country);
-      });
+    // fetch(url)
+    //   .then((respuesta) => respuesta.json())
+    //   .then((datos) => {
+    //     consultarAPI(datos[0].name, datos[0].country);
+    //   });
+    
+    try {
+      let respuesta = await fetch(url);
+      let data = await respuesta.json()
+      consultarAPI(data[0].name, data[0].country)
+
+    } catch (error) {
+        console.log(error)
+    }
+      
+
+      
   });
 }
 
