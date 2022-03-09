@@ -19,7 +19,6 @@ const cardViento = document.querySelector('#card_viento');
 document.addEventListener('DOMContentLoaded', () => {
   formulario.addEventListener('submit', buscarClima);
 
-  
   obtenerUbicacion();
   rellenarOptions();
 });
@@ -74,17 +73,12 @@ async function consultarAPI(ciudad, pais) {
   const appKEY = 'fc6a1cbe8e03d34e11457d0c8e2e02cc';
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${ciudad},${pais}&appid=${appKEY}`;
 
-  // fetch(url)
-  //   .then((respuesta) => respuesta.json())
-  //   .then((resultado) => mostrarResultado(resultado))
-  //   .catch((error) => mostrarError(error));
-
   try {
     let respuesta = await fetch(url);
-    let data = await respuesta.json()
-    mostrarResultado(data)
+    let data = await respuesta.json();
+    mostrarResultado(data);
   } catch (error) {
-    mostrarError(error)
+    mostrarError(error);
   }
 }
 
@@ -109,7 +103,7 @@ function mostrarResultado(resultado) {
     'src',
     `http://openweathermap.org/img/wn/${icon}@2x.png`
   );
-  cardCondicionActual.textContent = traducirCondicionActual(description);
+  /*Llena el valor de condicion actualizada*/traducirCondicionActual(description);
   cardTempActual.textContent = formatearTemperatura(temp);
   cardViento.textContent = formatearViento(deg, speed);
   cardHumedad.textContent = humidity + '%';
@@ -126,26 +120,16 @@ function obtenerUbicacion() {
   const appkey = 'fc6a1cbe8e03d34e11457d0c8e2e02cc';
   let url;
 
-navigator.geolocation.getCurrentPosition(async (res) => {
+  navigator.geolocation.getCurrentPosition(async (res) => {
     url = `https://api.openweathermap.org/geo/1.0/reverse?lat=${res.coords.latitude}&lon=${res.coords.longitude}&limit=1&appid=${appkey}&lang={sp}`;
 
-    // fetch(url)
-    //   .then((respuesta) => respuesta.json())
-    //   .then((datos) => {
-    //     consultarAPI(datos[0].name, datos[0].country);
-    //   });
-    
     try {
       let respuesta = await fetch(url);
-      let data = await respuesta.json()
-      consultarAPI(data[0].name, data[0].country)
-
+      let data = await respuesta.json();
+      consultarAPI(data[0].name, data[0].country);
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
-      
-
-      
   });
 }
 
@@ -187,35 +171,51 @@ function formatearViento(grados, velocidad) {
   return `${direcion} ${velocidad} Km/h`;
 }
 
-function traducirCondicionActual(condicion) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.open(
-    'GET',
-    'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=es&dt=t&q=' +
-      condicion,
-    false
-  );
-  xhttp.send();
-  var response = JSON.parse(xhttp.responseText);
-  return response[0][0][0];
+// function traducirCondicionActual(condicion) {
+//   var xhttp = new XMLHttpRequest();
+//   xhttp.open(
+//     'GET',
+//     'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=es&dt=t&q=' +
+//       condicion,
+//     false
+//   );
+//   xhttp.send();
+//   var response = JSON.parse(xhttp.responseText);
+//   return response[0][0][0];
+// }
+
+async function traducirCondicionActual(condicion){
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=es&dt=t&q=${condicion}`;
+  
+  
+  try {
+    let respuesta = await fetch(url);
+    const traduccion = await respuesta.json();
+    cardCondicionActual.textContent = traduccion[0][0][0]
+  } catch (error) {
+    console.log(error)
+  }
 }
 
-function rellenarOptions() {
+async function rellenarOptions() {
   const url =
     'https://restcountries.com/v2/all?fields=alpha2Code,translations,population';
 
-  fetch(url)
-    .then((respuesta) => respuesta.json())
-    .then((paises) => {
-      paises.forEach((pais) => {
-        const { alpha2Code, translations, population } = pais;
+  try {
+    let respuesta = await fetch(url);
+    const paises = await respuesta.json();
 
-        if (population > 2000000) {
-          const option = document.createElement('option');
-          option.value = alpha2Code;
-          option.textContent = translations['es'];
-          paisInput.appendChild(option);
-        }
-      });
+    paises.forEach((pais) => {
+      const { alpha2Code, translations, population } = pais;
+
+      if (population > 2000000) {
+        const option = document.createElement('option');
+        option.value = alpha2Code;
+        option.textContent = translations['es'];
+        paisInput.appendChild(option);
+      }
     });
+  } catch (error) {
+    mostrarError(error);
+  }
 }
