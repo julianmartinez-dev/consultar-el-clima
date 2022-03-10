@@ -82,7 +82,7 @@ async function consultarAPI(ciudad, pais) {
   }
 }
 
-function mostrarResultado(resultado) {
+async function mostrarResultado(resultado) {
   if (resultado.message === 'city not found') {
     mostrarError('Ciudad no encontrada');
     return;
@@ -103,7 +103,7 @@ function mostrarResultado(resultado) {
     'src',
     `http://openweathermap.org/img/wn/${icon}@2x.png`
   );
-  /*Llena el valor de condicion actualizada*/traducirCondicionActual(description);
+  cardCondicionActual.textContent = await traducirCondicionActual(description);
   cardTempActual.textContent = formatearTemperatura(temp);
   cardViento.textContent = formatearViento(deg, speed);
   cardHumedad.textContent = humidity + '%';
@@ -171,18 +171,6 @@ function formatearViento(grados, velocidad) {
   return `${direcion} ${velocidad} Km/h`;
 }
 
-// function traducirCondicionActual(condicion) {
-//   var xhttp = new XMLHttpRequest();
-//   xhttp.open(
-//     'GET',
-//     'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=es&dt=t&q=' +
-//       condicion,
-//     false
-//   );
-//   xhttp.send();
-//   var response = JSON.parse(xhttp.responseText);
-//   return response[0][0][0];
-// }
 
 async function traducirCondicionActual(condicion){
   const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=es&dt=t&q=${condicion}`;
@@ -191,7 +179,7 @@ async function traducirCondicionActual(condicion){
   try {
     let respuesta = await fetch(url);
     const traduccion = await respuesta.json();
-    cardCondicionActual.textContent = traduccion[0][0][0]
+    return traduccion[0][0][0]
   } catch (error) {
     console.log(error)
   }
