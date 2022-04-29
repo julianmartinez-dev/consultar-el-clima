@@ -134,7 +134,7 @@ function obtenerUbicacion() {
 }
 
 function formatearTemperatura(dato) {
-  dato = (dato / 10).toFixed(1);
+  dato = (dato - 273.15).toFixed(1);
   dato += '°C';
   return dato;
 }
